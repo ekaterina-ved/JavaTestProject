@@ -68,4 +68,40 @@ public class UserControllerTest {
                 .content(objectMapper.writeValueAsString(userDto)))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    void createUser_WithEmptyEmail_BadRequest() throws Exception {
+        userDto.setEmail("");
+
+        mockMvc.perform(post("/api/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userDto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Email не может быть пустым"));
+    }
+
+    @Test
+    void createUser_WithNullEmail_BadRequest() throws Exception {
+        userDto.setEmail(null);
+
+        mockMvc.perform(post("/api/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userDto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Email не может быть пустым"));
+    }
+
+    @Test
+    void createUser_WithInvalidEmailFormat_BadRequest() throws Exception {
+        userDto.setEmail("not-an-email");
+        
+        when(userService.createUser(any(UserDto.class)))
+            .thenThrow(new RuntimeException("Некорректный формат email"));
+
+        mockMvc.perform(post("/api/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userDto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Некорректный формат email"));
+    }
 } 

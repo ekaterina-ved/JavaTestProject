@@ -71,4 +71,49 @@ public class UserServiceTest {
         verify(userRepository).existsByEmail(userDto.getEmail());
         verify(userRepository, never()).save(any(User.class));
     }
+
+    @Test
+    void createUser_WithInvalidEmail_ThrowsException() {
+        // Given
+        userDto.setEmail("invalid-email");
+
+        // When & Then
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            userService.createUser(userDto);
+        });
+
+        assertEquals("Некорректный формат email", exception.getMessage());
+        verify(userRepository, never()).existsByEmail(any());
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void createUser_WithEmptyEmail_ThrowsException() {
+        // Given
+        userDto.setEmail("");
+
+        // When & Then
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            userService.createUser(userDto);
+        });
+
+        assertEquals("Email не может быть пустым", exception.getMessage());
+        verify(userRepository, never()).existsByEmail(any());
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void createUser_WithNullEmail_ThrowsException() {
+        // Given
+        userDto.setEmail(null);
+
+        // When & Then
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            userService.createUser(userDto);
+        });
+
+        assertEquals("Email не может быть пустым", exception.getMessage());
+        verify(userRepository, never()).existsByEmail(any());
+        verify(userRepository, never()).save(any());
+    }
 } 
