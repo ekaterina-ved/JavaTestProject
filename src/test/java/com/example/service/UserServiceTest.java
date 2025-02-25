@@ -82,7 +82,7 @@ public class UserServiceTest {
             userService.createUser(userDto);
         });
 
-        assertEquals("Некорректный формат email", exception.getMessage());
+        assertEquals("Некорректный email", exception.getMessage());
         verify(userRepository, never()).existsByEmail(any());
         verify(userRepository, never()).save(any());
     }

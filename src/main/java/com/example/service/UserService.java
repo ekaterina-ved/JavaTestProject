@@ -39,7 +39,7 @@ public class UserService {
             throw new RuntimeException("Email не может быть пустым");
         }
         if (!Pattern.compile(EMAIL_REGEX).matcher(email).matches()) {
-            throw new RuntimeException("Некорректный формат email");
+            throw new RuntimeException("Некорректный email");
         }
     }
 } 

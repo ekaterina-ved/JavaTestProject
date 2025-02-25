@@ -96,12 +96,12 @@ public class UserControllerTest {
         userDto.setEmail("not-an-email");
         
         when(userService.createUser(any(UserDto.class)))
-            .thenThrow(new RuntimeException("Некорректный формат email"));
+            .thenThrow(new RuntimeException("Некорректный email"));
 
         mockMvc.perform(post("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userDto)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Некорректный формат email"));
+                .andExpect(jsonPath("$.message").value("Некорректный email"));
     }
 } 
